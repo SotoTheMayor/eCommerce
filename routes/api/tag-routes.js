@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const sequelize = require('sequelize');
+const sequelize = require('../../config/connection.js');
 const { Tag, Product, ProductTag } = require('../../models');
 
 // The `/api/tags` endpoint
@@ -7,21 +7,26 @@ const { Tag, Product, ProductTag } = require('../../models');
 router.get('/', async (req, res) => {
   // find all tags
   // be sure to include its associated Product data
+  try {
   const tagData = await Tag.findAll({
-    // include: [{ model: ProductTag }, { model: Product}],
-    // attributes: {
-    //   include: [
-    //     [
-    //       sequelize.literal(
-    //         `(SELECT product_name FROM product WHERE productTagData.product_id = productData.product_id)`
-    //       )
-    //     ]
-    //   ]
-    // }
-  }).catch((err) => {
-    res.json(err);
-    });
-    res.json(tagData);
+    include: [{ model: ProductTag }, { model: Product}],
+    attributes: {
+      include: [
+        [
+          sequelize.literal(
+            // `(SELECT product_id FROM productTag WHERE productTag.tag_id = tag.id)`
+            `(SELECT * FROM productTag)`
+          ),
+          'productID',
+        ],
+      ],
+    },
+  });
+  res.status(200).json(tagData);
+}
+  catch(err) {
+    res.status(500).json(err);
+    };
 });
 
 router.get('/:id', (req, res) => {
