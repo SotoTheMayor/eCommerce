@@ -31,18 +31,18 @@ Product.init(
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
-        model: 'product',
-        key: 'productData.id',
+        model: 'category',
+        key: 'id',
       }
     },
-    tag_id: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      references: {
-        model: 'category',
-        key: 'categoryData.id',
-      }
-      },
+    // tag_id: {
+    //   type: DataTypes.INTEGER,
+    //   allowNull: false,
+    //   references: {
+    //     model: 'category',
+    //     key: 'id',
+    //   }
+    //   },
   },
   {
     sequelize,
